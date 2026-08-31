@@ -106,14 +106,28 @@
     });
     update();
     const cake = document.getElementById('cakeImg');
-    const audio = document.getElementById('firework');
+  const audio = document.getElementById('firework');
 
-    cake.addEventListener('click', function() {
-    audio.currentTime = 0; 
-    audio.play().catch(function(error) {
-      console.log("Lỗi phát âm thanh trên di động:", error);
-    });
+  function playAudio() {
+    audio.load(); 
+    audio.currentTime = 0;
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+      }).catch(error => {
+        console.log("iOS Autoplay restriction:", error);
+      });
+    }
+  }
+  cake.addEventListener('touchstart', function(e) {
+    e.preventDefault(); //
+    playAudio();
+  }, { passive: false });
+
+  cake.addEventListener('click', function() {
+    playAudio();
   });
+  
   });
 </script>
 </body>

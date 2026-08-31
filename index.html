@@ -17,8 +17,8 @@
     </header>
     <main>
         <p class="even"; id="p1"> Nhấn vào bánh sinh nhật để phát âm thanh</p>
-        <audio id="firework" src="sound/Firework_twinkle_far.mp3"></audio>
-        <img src="pic/Cake_JE4.png" alt="Birthday Image" style="max-width: 100%; height: auto; margin-top: 20px; cursor: pointer;" onclick="document.getElementById('firework').play();">
+        <audio id="firework" src="sound/Firework_twinkle_far.mp3" preload="auto" playsinline></audio>
+        <img src="pic/Cake_JE4.png" alt="Birthday Image"id="cakeImg" style="max-width: 100%; height: auto; margin-top: 20px; cursor: pointer;">
         <div, class="pic">
 
          <p class="even"; id="p2"> Mừng sinh nhật cháu Hà Mi hãy cùng xem quá trình phát triển suốt 2 năm qua nhé!! </p>
@@ -105,6 +105,15 @@
       update();
     });
     update();
+    const cake = document.getElementById('cakeImg');
+    const audio = document.getElementById('firework');
+
+    cake.addEventListener('click', function() {
+    audio.currentTime = 0; 
+    audio.play().catch(function(error) {
+      console.log("Lỗi phát âm thanh trên di động:", error);
+    });
+  });
   });
 </script>
 </body>

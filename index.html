@@ -16,10 +16,6 @@
         </div> 
     </header>
     <main>
-        <p class="even"; id="p1"> Nhấn vào bánh sinh nhật để phát âm thanh</p>
-        <img src="pic/Cake_JE4.png" alt="Birthday Image"id="cakeImg" style="max-width: 100%; height: auto; margin-top: 20px; cursor: pointer;">
-        <div, class="pic">
-
          <p class="even"; id="p2"> Mừng sinh nhật cháu Hà Mi hãy cùng xem quá trình phát triển suốt 2 năm qua nhé!! </p>
          <br>
          <br>
@@ -104,43 +100,6 @@
       update();
     });
     update();
-  });
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  let audioCtx;
-  let audioBuffer;
-  const audioUrl = 'sound/firework.mp3'; 
-  fetch(audioUrl)
-    .then(response => response.arrayBuffer())
-    .then(arrayBuffer => {
-      const tempCtx = new AudioContext();
-      return tempCtx.decodeAudioData(arrayBuffer);
-    })
-    .then(decodedData => {
-      audioBuffer = decodedData;
-      console.log("Âm thanh đã tải xong và sẵn sàng!");
-    })
-    .catch(e => console.error("Lỗi tải file âm thanh:", e));
-  function playSound() {
-    if (!audioCtx) {
-      audioCtx = new AudioContext();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-    if (audioBuffer) {
-      const source = audioCtx.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(audioCtx.destination);
-      source.start(0);
-    }
-  }
-  const cake = document.getElementById('cakeImg');
-  cake.addEventListener('touchend', function(e) {
-    playSound();
-  });
-
-  cake.addEventListener('click', function() {
-    playSound();
   });
 </script>
 </body>

@@ -16,9 +16,18 @@
         </div> 
     </header>
     <main>
-      <p id="p0"> Hãy bấm vào bánh sinh nhật</p>    
-       <audio id="cake" src="sound/Firework_twinkle_far.mp3"></audio>
-      <img src="pic/Cake_JE4.png " alt="Cake" class="cake-image" id="cake" style="cursor: pointer;" onclick="document.getElementById('cake').play();">
+      <p id="p0"> Hãy bấm vào bánh sinh nhật</p>
+      <audio id="cakeAudio" preload="auto" playsinline>
+        <source src="sound/Firework_twinkle_far.mp3" type="audio/mpeg">
+      </audio>
+      <img
+        src="pic/Cake_JE4.png"
+        alt="Cake"
+        class="cake-image"
+        id="cake"
+        style="cursor: pointer;"
+        onclick="const audio = document.getElementById('cakeAudio'); audio.currentTime = 0; audio.play().catch(() => {});"?>
+    
          <p class="even"; id="p2"> Mừng sinh nhật cháu Hà Mi hãy cùng xem quá trình phát triển suốt 2 năm qua nhé!! </p>
          <br>
          <br>

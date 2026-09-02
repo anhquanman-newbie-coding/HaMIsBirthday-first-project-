@@ -111,10 +111,28 @@
    const cake = document.getElementById('cake');
   const audio = document.getElementById('cakeAudio');
 
-  cake.addEventListener('click', () => {
-    audio.currentTime = 0;
-    audio.play().catch(() => {});
-  });
+    function playCakeSound() {
+    if (!audio) return;
+
+    audio.muted = false;
+    audio.volume = 1;
+
+    try {
+      audio.load();
+      audio.currentTime = 0;
+      audio.play().catch(() => {
+        setTimeout(() => {
+          audio.load();
+          audio.play().catch(() => {});
+        }, 200);
+      });
+    } catch (err) {
+      console.log('Audio play failed:', err);
+    }
+  }
+
+  cake.addEventListener('touchstart', playCakeSound, { passive: true });
+  cake.addEventListener('click', playCakeSound);
 </script>
 </body>
 </html>

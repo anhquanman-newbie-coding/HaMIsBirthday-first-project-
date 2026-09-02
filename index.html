@@ -17,12 +17,15 @@
     </header>
     <main>
       <p id="p0"> Hãy bấm vào bánh sinh nhật</p>
-      <button id="cakeBtn" type="button" aria-label="Play birthday song" style="background:none;border:none;padding:0;cursor:pointer;">
-        <img id="cake" src="pic/Cake_JE4.png" alt="Cake" class="cake-image" style="display:block;cursor:pointer;touch-action:manipulation;">
-      </button>
+      <audio id="cake_sound">
+        <source src="sound/Firework_twinkle_far.mp3" type="audio/mpeg">
+         <source src="sound/Firework_twinkle_far.wav" type="audio/wav">
 
-      <audio id="cakeAudio" preload="auto" playsinline></audio>
-
+      </audio>
+       <img src="pic/Cake_JE4.png" 
+        alt="cake" 
+         style="cursor: pointer;"
+         onclick="document.getElementById('cake_sound').play()">
          <p class="even"; id="p2"> Mừng sinh nhật cháu Hà Mi hãy cùng xem quá trình phát triển suốt 2 năm qua nhé!! </p>
          <br>
          <br>
@@ -107,21 +110,6 @@
     });
     update();
   });
-   const cakeBtn = document.getElementById('cakeBtn');
-  const audio = document.getElementById('cakeAudio');
-  audio.src = 'https://happybirthdayhami.vercel.app/sound/Firework_twinkle_far.mp3';
-
-  function playMusic() {
-    audio.muted = false;
-    audio.volume = 1;
-    audio.currentTime = 0;
-    audio.play().catch(() => {
-      console.log('Browser blocked audio');
-    });
-  }
-
-  cakeBtn.addEventListener('touchstart', playMusic, { passive: true });
-  cakeBtn.addEventListener('click', playMusic);
 </script>
 </body>
 </html>

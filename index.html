@@ -108,10 +108,14 @@
 
   const cake = document.getElementById('cake');
   const cakeAudio = document.getElementById('cakeAudio');
-  const audioUrl = 'https://happybirthdayhamy.vercel.app/sound/Firework_twinkle_far.m4a';
+  const baseUrl = 'https://happybirthdayhamy.vercel.app/sound/';
+  const audioCandidates = [
+   `${baseUrl}Firework_twinkle_far.m4a`,
+   `${baseUrl}Firework_twinkle_far.mp3`,
+   `${baseUrl}Firework_twinkle_far.wav`
+  ];
 
-  cakeAudio.src = audioUrl;
-
+  let selectedAudioUrl = audioCandidates[0];
   let audioCtx = null;
   let decodedBuffer = null;
 
@@ -124,19 +128,39 @@
    return audioCtx;
   }
 
+  function getBestAudioUrl() {
+   const supportsM4A = !!cakeAudio.canPlayType && cakeAudio.canPlayType('audio/mp4').length > 0;
+   if (supportsM4A) return audioCandidates[0];
+   return audioCandidates.find((url) => url.endsWith('.mp3')) || audioCandidates[0];
+  }
+
+  function setAudioSource(url) {
+   selectedAudioUrl = url;
+   cakeAudio.src = url;
+   cakeAudio.load();
+  }
+
   async function decodeAudioBuffer() {
    if (decodedBuffer) return decodedBuffer;
 
    const ctx = getAudioContext();
    if (!ctx) return null;
 
-   const response = await fetch(audioUrl);
-   const arrayBuffer = await response.arrayBuffer();
-   decodedBuffer = await ctx.decodeAudioData(arrayBuffer.slice(0));
-   return decodedBuffer;
+   try {
+     const response = await fetch(selectedAudioUrl);
+     if (!response.ok) return null;
+     const arrayBuffer = await response.arrayBuffer();
+     decodedBuffer = await ctx.decodeAudioData(arrayBuffer.slice(0));
+     return decodedBuffer;
+   } catch (err) {
+     return null;
+   }
   }
 
   async function playWithAudioElement() {
+   const url = getBestAudioUrl();
+   setAudioSource(url);
+
    cakeAudio.currentTime = 0;
    cakeAudio.volume = 1;
    cakeAudio.muted = false;
@@ -151,10 +175,10 @@
      await ctx.resume();
    }
 
-   const source = ctx.createBufferSource();
    const buffer = await decodeAudioBuffer();
    if (!buffer) return false;
 
+   const source = ctx.createBufferSource();
    source.buffer = buffer;
    source.connect(ctx.destination);
    source.start(0);
@@ -163,6 +187,7 @@
 
   async function playBirthdaySound() {
    try {
+     setAudioSource(getBestAudioUrl());
      await playWithAudioElement();
      return;
    } catch (err) {
@@ -173,6 +198,8 @@
      }
    }
   }
+
+  setAudioSource(getBestAudioUrl());
 
   cake.addEventListener('click', () => {
    playBirthdaySound();

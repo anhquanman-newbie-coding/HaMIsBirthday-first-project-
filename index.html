@@ -17,8 +17,10 @@
     </header>
     <main>
       <p id="p0"> Hãy bấm vào bánh sinh nhật</p>
+      <button id="cakeBtn" type="button" aria-label="Play birthday sound" style="background:none; border:none; padding:0; cursor:pointer;">
+        <img id="cake" src="pic/Cake_JE4.png" alt="Cake" class="cake-image" style="cursor:pointer; touch-action:manipulation; display:block;">
+      </button>
       <audio id="cakeAudio" preload="auto" playsinline crossorigin="anonymous"></audio>
-      <img id="cake" src="pic/Cake_JE4.png" alt="Cake" class="cake-image" style="cursor:pointer; touch-action:manipulation;">
          <p class="even"; id="p2"> Mừng sinh nhật cháu Hà My hãy cùng xem quá trình phát triển suốt 2 năm qua nhé!! </p>
          <br>
          <br>
@@ -106,109 +108,25 @@
     update();
   });
 
-  const cake = document.getElementById('cake');
+  const cakeBtn = document.getElementById('cakeBtn');
   const cakeAudio = document.getElementById('cakeAudio');
-  const baseUrl = 'https://happybirthdayhamy.vercel.app/sound/';
-  const audioCandidates = [
-   `${baseUrl}Firework_twinkle_far.m4a`,
-   `${baseUrl}Firework_twinkle_far.mp3`,
-   `${baseUrl}Firework_twinkle_far.wav`
-  ];
+  const audioUrl = 'https://happybirthdayhamy.vercel.app/sound/Firework_twinkle_far.m4a';
 
-  let selectedAudioUrl = audioCandidates[0];
-  let audioCtx = null;
-  let decodedBuffer = null;
-
-  function getAudioContext() {
-   const AudioCtor = window.AudioContext || window.webkitAudioContext;
-   if (!AudioCtor) return null;
-   if (!audioCtx) {
-     audioCtx = new AudioCtor();
-   }
-   return audioCtx;
-  }
-
-  function getBestAudioUrl() {
-   const supportsM4A = !!cakeAudio.canPlayType && cakeAudio.canPlayType('audio/mp4').length > 0;
-   if (supportsM4A) return audioCandidates[0];
-   return audioCandidates.find((url) => url.endsWith('.mp3')) || audioCandidates[0];
-  }
-
-  function setAudioSource(url) {
-   selectedAudioUrl = url;
-   cakeAudio.src = url;
-   cakeAudio.load();
-  }
-
-  async function decodeAudioBuffer() {
-   if (decodedBuffer) return decodedBuffer;
-
-   const ctx = getAudioContext();
-   if (!ctx) return null;
-
-   try {
-     const response = await fetch(selectedAudioUrl);
-     if (!response.ok) return null;
-     const arrayBuffer = await response.arrayBuffer();
-     decodedBuffer = await ctx.decodeAudioData(arrayBuffer.slice(0));
-     return decodedBuffer;
-   } catch (err) {
-     return null;
-   }
-  }
-
-  async function playWithAudioElement() {
-   const url = getBestAudioUrl();
-   setAudioSource(url);
-
-   cakeAudio.currentTime = 0;
-   cakeAudio.volume = 1;
-   cakeAudio.muted = false;
-   await cakeAudio.play();
-  }
-
-  async function playWithAudioContext() {
-   const ctx = getAudioContext();
-   if (!ctx) return false;
-
-   if (ctx.state === 'suspended') {
-     await ctx.resume();
-   }
-
-   const buffer = await decodeAudioBuffer();
-   if (!buffer) return false;
-
-   const source = ctx.createBufferSource();
-   source.buffer = buffer;
-   source.connect(ctx.destination);
-   source.start(0);
-   return true;
-  }
+  cakeAudio.src = audioUrl;
 
   async function playBirthdaySound() {
    try {
-     setAudioSource(getBestAudioUrl());
-     await playWithAudioElement();
-     return;
+     cakeAudio.currentTime = 0;
+     cakeAudio.volume = 1;
+     cakeAudio.muted = false;
+     await cakeAudio.play();
    } catch (err) {
-     try {
-       await playWithAudioContext();
-     } catch (fallbackErr) {
-       console.log('Audio playback failed:', fallbackErr);
-     }
+     console.log('Audio play blocked:', err);
    }
   }
 
-  setAudioSource(getBestAudioUrl());
-
-  cake.addEventListener('click', () => {
-   playBirthdaySound();
-  });
-
-  cake.addEventListener('touchstart', () => {
-   playBirthdaySound();
-  }, { passive: true });
-
+  cakeBtn.addEventListener('click', playBirthdaySound, { passive: false });
+  cakeBtn.addEventListener('touchstart', playBirthdaySound, { passive: false });
 </script>
 </body>
 </html>

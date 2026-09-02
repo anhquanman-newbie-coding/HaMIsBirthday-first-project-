@@ -17,15 +17,7 @@
     </header>
     <main>
       <p id="p0"> Hãy bấm vào bánh sinh nhật</p>
-      <audio id="cake_sound">
-        <source src="sound/Firework_twinkle_far.mp3" type="audio/mpeg">
-         <source src="sound/Firework_twinkle_far.wav" type="audio/wav">
-
-      </audio>
-       <img src="pic/Cake_JE4.png" 
-        alt="cake" 
-         style="cursor: pointer;"
-         onclick="document.getElementById('cake_sound').play()">
+      <img id="cake" src="pic/Cake_JE4.png" alt="Cake" class="cake-image" style="cursor:pointer; touch-action:manipulation;">
          <p class="even"; id="p2"> Mừng sinh nhật cháu Hà Mi hãy cùng xem quá trình phát triển suốt 2 năm qua nhé!! </p>
          <br>
          <br>
@@ -109,7 +101,42 @@
       update();
     });
     update();
-  });
+  });const cake = document.getElementById('cake');
+  let audioCtx = null;
+  let buffer = null;
+
+  async function loadAudio() {
+    if (buffer) return buffer;
+
+    const response = await fetch('https://happybirthdayhami.vercel.app/sound/Firework_twinkle_far.mp3');
+    const arrayBuffer = await response.arrayBuffer();
+
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    buffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
+    return buffer;
+  }
+
+  async function playBirthdaySound() {
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+      }
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = await loadAudio();
+      source.connect(audioCtx.destination);
+      source.start(0);
+    } catch (err) {
+      console.log('Safari audio blocked:', err);
+    }
+  }
+  cake.addEventListener('click', playBirthdaySound);
+  cake.addEventListener('touchstart', playBirthdaySound, { passive: true });
+
 </script>
 </body>
 </html>

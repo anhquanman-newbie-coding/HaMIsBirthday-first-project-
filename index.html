@@ -20,13 +20,9 @@
       <audio id="cakeAudio" preload="auto" playsinline>
         <source src="sound/Firework_twinkle_far.mp3" type="audio/mpeg">
       </audio>
-      <img
-        src="pic/Cake_JE4.png"
-        alt="Cake"
-        class="cake-image"
-        id="cake"
-        style="cursor: pointer;"
-        onclick="const audio = document.getElementById('cakeAudio'); audio.currentTime = 0; audio.play().catch(() => {});"?>
+
+      <img id="cake" src="pic/Cake_JE4.png" alt="Cake" class="cake-image" style="cursor:pointer;">
+
     
          <p class="even"; id="p2"> Mừng sinh nhật cháu Hà Mi hãy cùng xem quá trình phát triển suốt 2 năm qua nhé!! </p>
          <br>
@@ -63,8 +59,7 @@
                   <div class="carousel-item"><img src="pic/hami-1(11).jpg" alt="Photo 11" style=" height: 250px; width: 200px";></div>
                  </div>
                 <button class="nav-btn next">&#10095;</button>
-            </div>
-</div>
+                </div>
      </main>
     <footer>
         <h1 style="font-size: 20px;"class="odd"; id="h1"> Chú code đến đây thôi thế này mỏi lắm rồi:3</h1>
@@ -112,6 +107,13 @@
       update();
     });
     update();
+  });
+   const cake = document.getElementById('cake');
+  const audio = document.getElementById('cakeAudio');
+
+  cake.addEventListener('click', () => {
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
   });
 </script>
 </body>

@@ -17,11 +17,12 @@
     </header>
     <main>
       <p id="p0"> Hãy bấm vào bánh sinh nhật</p>
-      <audio id="cakeAudio" preload="auto" playsinline crossorigin="anonymous"></audio>
+      <button id="cakeBtn" type="button" aria-label="Play birthday song" style="background:none;border:none;padding:0;cursor:pointer;">
+        <img id="cake" src="pic/Cake_JE4.png" alt="Cake" class="cake-image" style="display:block;cursor:pointer;touch-action:manipulation;">
+      </button>
 
-      <img id="cake" src="pic/Cake_JE4.png" alt="Cake" class="cake-image" style="cursor:pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
+      <audio id="cakeAudio" preload="auto" playsinline></audio>
 
-    
          <p class="even"; id="p2"> Mừng sinh nhật cháu Hà Mi hãy cùng xem quá trình phát triển suốt 2 năm qua nhé!! </p>
          <br>
          <br>
@@ -106,43 +107,21 @@
     });
     update();
   });
-   const cake = document.getElementById('cake');
+   const cakeBtn = document.getElementById('cakeBtn');
   const audio = document.getElementById('cakeAudio');
-  const mp3Url = 'https://happybirthdayhami.vercel.app/sound/Firework_twinkle_far.mp3';
+  audio.src = 'https://happybirthdayhami.vercel.app/sound/Firework_twinkle_far.mp3';
 
-  audio.src = mp3Url;
-  audio.preload = 'auto';
-  audio.muted = false;
-
-  function retryPlayCakeSound() {
-    try {
-      audio.pause();
-      audio.currentTime = 0;
-      audio.load();
-      const playPromise = audio.play();
-      if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(() => {
-          setTimeout(() => {
-            audio.currentTime = 0;
-            audio.play().catch(() => {});
-          }, 250);
-        });
-      }
-    } catch (e) {
-      console.log('Audio error:', e);
-    }
+  function playMusic() {
+    audio.muted = false;
+    audio.volume = 1;
+    audio.currentTime = 0;
+    audio.play().catch(() => {
+      console.log('Browser blocked audio');
+    });
   }
 
-  function playCakeSound(event) {
-    if (event) {
-      event.preventDefault();
-    }
-    retryPlayCakeSound();
-  }
-
-  ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click', 'keydown'].forEach((eventName) => {
-    cake.addEventListener(eventName, playCakeSound, { passive: false });
-  });
+  cakeBtn.addEventListener('touchstart', playMusic, { passive: true });
+  cakeBtn.addEventListener('click', playMusic);
 </script>
 </body>
 </html>

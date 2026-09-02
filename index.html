@@ -17,11 +17,9 @@
     </header>
     <main>
       <p id="p0"> Hãy bấm vào bánh sinh nhật</p>
-      <audio id="cakeAudio" preload="auto" playsinline>
-        <source src="sound/Firework_twinkle_far.mp3" type="audio/mpeg">
-      </audio>
+      <audio id="cakeAudio" preload="auto" playsinline crossorigin="anonymous"></audio>
 
-      <img id="cake" src="pic/Cake_JE4.png" alt="Cake" class="cake-image" style="cursor:pointer;">
+      <img id="cake" src="pic/Cake_JE4.png" alt="Cake" class="cake-image" style="cursor:pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
 
     
          <p class="even"; id="p2"> Mừng sinh nhật cháu Hà Mi hãy cùng xem quá trình phát triển suốt 2 năm qua nhé!! </p>
@@ -116,21 +114,35 @@
   audio.preload = 'auto';
   audio.muted = false;
 
-  function playCakeSound() {
+  function retryPlayCakeSound() {
     try {
       audio.pause();
       audio.currentTime = 0;
       audio.load();
-      audio.play().catch(() => {
-        console.log('iPhone blocked audio play');
-      });
+      const playPromise = audio.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(() => {
+          setTimeout(() => {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+          }, 250);
+        });
+      }
     } catch (e) {
       console.log('Audio error:', e);
     }
   }
 
-  cake.addEventListener('touchstart', playCakeSound, { passive: true });
-  cake.addEventListener('click', playCakeSound);
+  function playCakeSound(event) {
+    if (event) {
+      event.preventDefault();
+    }
+    retryPlayCakeSound();
+  }
+
+  ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click', 'keydown'].forEach((eventName) => {
+    cake.addEventListener(eventName, playCakeSound, { passive: false });
+  });
 </script>
 </body>
 </html>

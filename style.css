@@ -27,7 +27,12 @@ footer {
     color: #ffffff;
     padding: 10px;
     text-align: center;
-}     
+} 
+#p0 {
+    font-size: 30px;
+    color:rgb(224, 110, 205);
+}
+    
 h1{
     font-family: 'Arial', sans-serif;
     font-size: 40px;

@@ -1,12 +1,28 @@
+html {
+    min-height: 100%;
+}
+
 body {
     background-color: black;
     background-image: url("pic/cake2.jpg");
     background-size: cover;
-    margin: auto;
+    min-height: 100svh;
+    margin: 0;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
+    background-attachment: scroll;
+}
+
+@media (min-width: 768px) {
+    body {
+        background-attachment: fixed;
+    }
+}
+
+@media (max-width: 767px) {
+    body {
+        background-position: center top;
+    }
 }
 
 header {

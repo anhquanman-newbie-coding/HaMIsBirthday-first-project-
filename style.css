@@ -21,8 +21,22 @@ body {
 
 @media (max-width: 767px) {
     body {
-        background-position: center top;
-        background-size: 100% auto;
+        position: relative;
+        background-image: none;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background: black url("pic/cake2.jpg") center center / contain no-repeat;
+    }
+
+    body > * {
+        position: relative;
+        z-index: 1;
     }
 }
 
